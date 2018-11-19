@@ -12,10 +12,12 @@ import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.admin.daggerretrofitproject1.R
+import com.example.admin.daggerretrofitproject1.modules.home.MainActivity
 import com.example.admin.daggerretrofitproject1.mvp.model.Cake
 
 class CakeAdapter(private val mLayoutInflater: LayoutInflater): RecyclerView.Adapter<CakeAdapter.Holder>() {
     private var mCakeList = ArrayList<Cake>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(mLayoutInflater.inflate(R.layout.list_item_layout,parent, false))
     }
@@ -30,7 +32,12 @@ class CakeAdapter(private val mLayoutInflater: LayoutInflater): RecyclerView.Ada
 
     inner class Holder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(v: View?) {
-
+            if (mCakeClickListener is MainActivity) {
+                println("OKKKK")
+            } else {
+                println("listener is ${mCakeClickListener.toString()}")
+            }
+            mCakeClickListener?.onClick(mCakeIcon, mCake, adapterPosition)
         }
 
         @BindView(R.id.cake_icon) protected lateinit var mCakeIcon: ImageView
@@ -41,9 +48,9 @@ class CakeAdapter(private val mLayoutInflater: LayoutInflater): RecyclerView.Ada
         lateinit var mCake: Cake
 
         init {
-            itemView.setOnClickListener(this)
             mContext = itemView.context
             ButterKnife.bind(this, itemView)
+            itemView.setOnClickListener(this)
         }
 
         fun bind(cake: Cake) {
@@ -56,7 +63,7 @@ class CakeAdapter(private val mLayoutInflater: LayoutInflater): RecyclerView.Ada
     }
 
     fun setCakeListener(listener: OnCakeClickListener) {
-        if (mCakeClickListener != null) {
+        if (mCakeClickListener == null) {
             mCakeClickListener = listener
         }
     }
@@ -71,9 +78,11 @@ class CakeAdapter(private val mLayoutInflater: LayoutInflater): RecyclerView.Ada
         notifyDataSetChanged()
     }
 
-    private lateinit var mCakeClickListener: OnCakeClickListener
+    private var mCakeClickListener: OnCakeClickListener? = null
+
     interface OnCakeClickListener {
         fun onClick(v: View, cake: Cake, position: Int)
     }
+
 
 }

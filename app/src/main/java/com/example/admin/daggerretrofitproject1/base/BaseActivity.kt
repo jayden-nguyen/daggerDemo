@@ -31,6 +31,13 @@ abstract class BaseActivity: AppCompatActivity() {
 
     }
 
+    fun showBackArrow(){
+        val supportActionBar = supportActionBar
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true)
+            supportActionBar.setDisplayShowHomeEnabled(true)
+        }
+    }
     open fun resolveDaggerDependency(){}
 
     protected fun showDialog(message: String) {
